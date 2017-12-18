@@ -7,7 +7,7 @@ import com.github.spardarus.minispring.test.beans.PrintWithHello;
 import com.github.spardarus.minispring.test.beans.Printable;
 
 @Configuration
-@ComponentScan("com.github.spardarus.springtest.bean")
+@ComponentScan("com.github.spardarus.minispring.test.beans")
 public class AppConfiguration {
     @Bean(name="Hello")
     public Printable getPrintable() {

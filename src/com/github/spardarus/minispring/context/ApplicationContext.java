@@ -1,5 +1,7 @@
 package com.github.spardarus.minispring.context;
 
+import com.github.spardarus.minispring.context.annotations.ComponentScan;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -10,6 +12,18 @@ public class ApplicationContext {
 
     public ApplicationContext(Class configClass) {
         addBean(configClass);
+        setValue(configClass);
+    }
+
+    private void setValue(Class configClass){
+        if(configClass.isAnnotationPresent(
+                ComponentScan.class)){
+            ComponentScan componentScan= (ComponentScan) configClass.getAnnotation(
+                    ComponentScan.class);
+            Package aPackage=Package.getPackage(componentScan.value());
+            //ClassLoader cl=configClass.getClassLoader().getParent()
+           //Class[] classes=ClassLoader.
+        }
     }
 
     public Object getBean(String s) {
