@@ -1,4 +1,4 @@
-package com.github.spardarus.minispring.test;
+package com.github.spardarus.minispring.test.beans;
 
 import com.github.spardarus.minispring.context.annotations.Autowired;
 import com.github.spardarus.minispring.context.annotations.Service;

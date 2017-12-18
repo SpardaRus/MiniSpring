@@ -1,4 +1,4 @@
-package com.github.spardarus.minispring.test;
+package com.github.spardarus.minispring.test.beans;
 
 public class PrintWithHello implements Printable {
     public String s;
