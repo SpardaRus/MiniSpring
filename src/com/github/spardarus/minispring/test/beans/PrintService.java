@@ -6,7 +6,10 @@ import com.github.spardarus.minispring.context.annotations.Service;
 
 @Service
 public class PrintService {
-    public PrintService() {
+    @Autowired
+    public PrintService(Gun w,PrintWithHello hello){
+        w.shoot();
+        hello.print();
     }
 
     @Autowired
