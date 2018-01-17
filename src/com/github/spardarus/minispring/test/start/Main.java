@@ -1,4 +1,4 @@
-package com.github.spardarus.minispring.start;
+package com.github.spardarus.minispring.test.start;
 
 import com.github.spardarus.minispring.context.ApplicationContext;
 import com.github.spardarus.minispring.test.beans.PrintService;
@@ -11,11 +11,12 @@ public class Main {
         System.out.println();
 
         ApplicationContext context=new ApplicationContext(AppConfiguration.class);
-        Printable p=(Printable)context.getBean("Hello");
+        Printable p=(Printable)context.getBean("getHPrintable");
         p.print();
 
-        PrintService ps=(PrintService)context.getBean("PrintService");
+        PrintService ps=(PrintService)context.getBean("printService");
         ps.say();
+
         System.out.println();
         System.out.println("End");
     }
