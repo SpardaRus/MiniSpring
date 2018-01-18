@@ -17,7 +17,6 @@ public class ApplicationContext {
         addBean();
     }
     private void setObjectFields(Object object) throws IllegalAccessException {
-        int nq = 0;
         int na = 0;
         String qualiName = "";
         Field[] fields = object.getClass().getDeclaredFields();
@@ -31,11 +30,8 @@ public class ApplicationContext {
                     for (Type type : t) {
                         if (f.getType().equals(type) && b.getName().equals(qualiName)) {
                             f.set(object, b.getObject());
-                            //n++; Proverka nujna esli mnogo imen odinkovix
                         }
-                        if (nq == 2) {
-                            throw new IllegalArgumentException("Qualifier have two or more name: " + qualiName);
-                        }
+
                     }
                 }
             }else{
@@ -65,9 +61,24 @@ public class ApplicationContext {
         Class classAutowired = Class.forName(thisName);
         Object objectAutowired = newObjectAutowired(classAutowired);
         setObjectFields(objectAutowired);
+        setObjectMethods(objectAutowired);
         return objectAutowired;
     }
 
+    private void setObjectMethods(Object object) throws InvocationTargetException, IllegalAccessException {
+        Method[] methods=object.getClass().getMethods();
+        for(Method m:methods){
+            if (m.isAnnotationPresent(Autowired.class)) {
+                m.setAccessible(true);
+                Type[] typesParametersMethods = m.getParameterTypes();
+                Object[] parametersObject = new Object[typesParametersMethods.length];
+                for(int i=0;i<typesParametersMethods.length;i++){
+                    parametersObject[i]=getObjectType(typesParametersMethods[i]);
+                }
+                m.invoke(object,parametersObject);
+            }
+        }
+    }
     private Object newObjectAutowired(Class classAutowired) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Object objectAutowired = null;
         Constructor[] constructors = classAutowired.getDeclaredConstructors();
