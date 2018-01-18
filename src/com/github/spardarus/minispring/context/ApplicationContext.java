@@ -23,6 +23,7 @@ public class ApplicationContext {
         for (Field f : fields) {
             f.setAccessible(true);
             if (f.isAnnotationPresent(Autowired.class)
+                    &&f.getAnnotation(Autowired.class).required()
                     && f.isAnnotationPresent(Qualifire.class)) {
                 qualiName = f.getAnnotation(Qualifire.class).value();
                 for (Bean b : bean) {
@@ -35,8 +36,8 @@ public class ApplicationContext {
                     }
                 }
             }else{
-                if (f.isAnnotationPresent(Autowired.class)) {
-                    f.setAccessible(true);
+                if (f.isAnnotationPresent(Autowired.class)
+                        &&f.getAnnotation(Autowired.class).required()) {
                     for (Bean b : bean) {
                         Type[] t = b.getObject().getClass().getGenericInterfaces();
                         for (Type type : t) {
@@ -66,9 +67,10 @@ public class ApplicationContext {
     }
 
     private void setObjectMethods(Object object) throws InvocationTargetException, IllegalAccessException {
-        Method[] methods=object.getClass().getMethods();
+        Method[] methods=object.getClass().getDeclaredMethods();
         for(Method m:methods){
-            if (m.isAnnotationPresent(Autowired.class)) {
+            if (m.isAnnotationPresent(Autowired.class)
+                    &&m.getAnnotation(Autowired.class).required()) {
                 m.setAccessible(true);
                 Type[] typesParametersMethods = m.getParameterTypes();
                 Object[] parametersObject = new Object[typesParametersMethods.length];

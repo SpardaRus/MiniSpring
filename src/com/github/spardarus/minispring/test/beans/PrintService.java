@@ -9,7 +9,7 @@ public class PrintService {
     public PrintService() {
     }
 
-    @Autowired
+    @Autowired(required = false)
     public void Go(Gun w,PrintWithHello hello){
         w.shoot();
         hello.print();

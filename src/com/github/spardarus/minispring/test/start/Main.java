@@ -11,8 +11,8 @@ public class Main {
         System.out.println();
 
         ApplicationContext context=new ApplicationContext(AppConfiguration.class);
-        Printable p=(Printable)context.getBean("getHPrintable");
-        p.print();
+//        Printable p=(Printable)context.getBean("getHPrintable");
+//        p.print();
 
         PrintService ps=(PrintService)context.getBean("printService");
         ps.say();
