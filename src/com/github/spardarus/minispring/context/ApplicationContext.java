@@ -89,6 +89,20 @@ public class ApplicationContext {
         Object objectAutowired = newObjectAutowired(classAutowired);
         setObjectFields(objectAutowired);
         setObjectMethods(objectAutowired);
+        if(!classAutowired.isAnnotationPresent(Scope.class)){
+            bean.add(new Bean(className,objectAutowired));
+        }else{
+            Scope scope=(Scope)classAutowired.getAnnotation(Scope.class);
+            if(scope.value().equals("prototype")){
+                }else{
+            if(scope.value().equals("singleton")){
+                bean.add(new Bean(className,objectAutowired));
+            }else{
+                throw new IllegalArgumentException("Class:'"+className+"'" +
+                        "must 'prototype' or 'singleton'");
+            }
+            }
+        }
         return objectAutowired;
     }
 

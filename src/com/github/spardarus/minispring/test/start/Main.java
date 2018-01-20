@@ -15,10 +15,16 @@ public class Main {
         Printable p=(Printable)context.getBean("zik");
         p.print();
 
+        PrintService2 ps22=(PrintService2)context.getBean("printService2");
+        ps22.go();
         PrintService ps=(PrintService)context.getBean("printService");
         ps.say();
-        PrintService2 ps2=(PrintService2)context.getBean("printService2");
-        ps2.go();
+        ps.s="22222";
+        System.out.println("***** "+ps.s);
+        PrintService ps2=(PrintService)context.getBean("printService");
+        System.out.println("***** "+ps2.s);
+
+
         System.out.println();
         System.out.println("End");
     }

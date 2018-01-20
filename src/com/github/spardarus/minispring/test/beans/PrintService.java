@@ -2,10 +2,13 @@ package com.github.spardarus.minispring.test.beans;
 
 import com.github.spardarus.minispring.context.annotations.Autowired;
 import com.github.spardarus.minispring.context.annotations.Qualifire;
+import com.github.spardarus.minispring.context.annotations.Scope;
 import com.github.spardarus.minispring.context.annotations.Service;
 
 @Service
+@Scope("prototype")
 public class PrintService {
+    public String s;
     @Autowired
     public PrintService(Gun g) {
         g.shoot();
