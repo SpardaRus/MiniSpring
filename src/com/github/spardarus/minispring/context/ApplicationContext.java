@@ -1,8 +1,6 @@
 package com.github.spardarus.minispring.context;
 
-import com.github.spardarus.minispring.context.annotations.Autowired;
-import com.github.spardarus.minispring.context.annotations.ComponentScan;
-import com.github.spardarus.minispring.context.annotations.Qualifire;
+import com.github.spardarus.minispring.context.annotations.*;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -14,8 +12,25 @@ public class ApplicationContext {
 
     public ApplicationContext(Class configClass) {
         this.configClass = configClass;
+        if(configClass.isAnnotationPresent(Import.class)){
+            addBeanImport();
+        }
         addBean();
     }
+
+    List<Bean> getApConBean() {
+        return bean;
+    }
+
+    private void addBeanImport() {
+        Import imp= (Import) configClass.getAnnotation(Import.class);
+        Class[] impClass=imp.value();
+        for (Class c:impClass){
+            bean.addAll(new ApplicationContext(c).getApConBean());
+        }
+
+    }
+
     private void setObjectFields(Object object) throws IllegalAccessException {
         int na = 0;
         String qualiName = "";
@@ -57,9 +72,20 @@ public class ApplicationContext {
     }
     private Object getAutowired(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
         ComponentScan componentScan = (ComponentScan) configClass.getAnnotation(ComponentScan.class);
-        String thisName = "" + componentScan.value() + "." + className.substring(0, 1).toUpperCase() +
-                className.substring(1);
+        String thisName=null;
+        if(!componentScan.value().equals("")){
+        thisName = "" + componentScan.value() + "." + className.substring(0, 1).toUpperCase() +
+                className.substring(1);}
+        else{
+            thisName = "" + configClass.getPackageName() + "." + className.substring(0, 1).toUpperCase() +
+                    className.substring(1);
+        }
         Class classAutowired = Class.forName(thisName);
+        if(classAutowired.isAnnotationPresent(Service.class)
+                ||classAutowired.isAnnotationPresent(Component.class)){
+        }else{
+            throw new IllegalArgumentException("Class must be @Service or @Component");
+        }
         Object objectAutowired = newObjectAutowired(classAutowired);
         setObjectFields(objectAutowired);
         setObjectMethods(objectAutowired);
@@ -130,7 +156,7 @@ public class ApplicationContext {
                 return b.getObject();
             }
         }
-        if (configClass.isAnnotationPresent(ComponentScan.class)) {
+        if (configClass.isAnnotationPresent(Configuration.class)) {
 
             try {
                 return getAutowired(className);
@@ -156,6 +182,11 @@ public class ApplicationContext {
                 name = met.getAnnotation(com.github.spardarus.minispring.context.annotations.Bean.class).name();
                 if (name.equals("")) {
                     name = met.getName();
+                }
+                for(Bean b:bean){
+                    if(name.equals(b.getName())){
+                        throw new IllegalArgumentException("Bean name:'"+name+"' two or more");
+                    }
                 }
                 try {
                     Object object = met.invoke(configClass.newInstance());

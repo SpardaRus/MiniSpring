@@ -6,7 +6,9 @@ import com.github.spardarus.minispring.context.annotations.Service;
 
 @Service
 public class PrintService {
-    public PrintService() {
+    @Autowired
+    public PrintService(Gun g) {
+        g.shoot();
     }
 
     @Autowired(required = false)
@@ -20,7 +22,7 @@ public class PrintService {
     Printable p;
 
     @Autowired
-    @Qualifire("getHPrintable")
+    @Qualifire("zik")
     Printable p2;
 
     public void say(){
