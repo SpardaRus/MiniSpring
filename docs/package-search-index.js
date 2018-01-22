@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.github.spardarus.minispring.context"},{"l":"com.github.spardarus.minispring.context.annotations"},{"l":"com.github.spardarus.minispring.test.beans"},{"l":"com.github.spardarus.minispring.test.config"},{"l":"com.github.spardarus.minispring.test.start"}]

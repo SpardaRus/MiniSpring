@@ -1,0 +1,5 @@
+com.github.spardarus.minispring.context
+com.github.spardarus.minispring.context.annotations
+com.github.spardarus.minispring.test.beans
+com.github.spardarus.minispring.test.config
+com.github.spardarus.minispring.test.start
