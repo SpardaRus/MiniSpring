@@ -6,10 +6,23 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class contains the context of bins and the logic of their creation.
+ */
 public class ApplicationContext {
+    /**
+     * Class configuration
+     */
     private Class configClass;
+    /**
+     * Context bins
+     */
     private List<Bean> bean = new ArrayList<>();
 
+    /**
+     * Constructor create bins
+     * @param configClass Class configuration
+     */
     public ApplicationContext(Class configClass) {
         this.configClass = configClass;
         if(configClass.isAnnotationPresent(Import.class)){
@@ -18,10 +31,19 @@ public class ApplicationContext {
         addBean();
     }
 
+    /**
+     * Method is to use the import other configuration files
+     * @return Context bins
+     */
     List<Bean> getApConBean() {
         return bean;
     }
 
+    /**
+     * In the configuration file have annotation @Import
+     * take classes of other configuration files contained
+     * in the bins added to the context.
+     */
     private void addBeanImport() {
         Import imp= (Import) configClass.getAnnotation(Import.class);
         Class[] impClass=imp.value();
@@ -31,6 +53,11 @@ public class ApplicationContext {
 
     }
 
+    /**
+     * Set values to the fields bean
+     * @param object bean
+     * @throws IllegalAccessException
+     */
     private void setObjectFields(Object object) throws IllegalAccessException {
         int na = 0;
         String qualiName = "";
@@ -39,8 +66,8 @@ public class ApplicationContext {
             f.setAccessible(true);
             if (f.isAnnotationPresent(Autowired.class)
                     &&f.getAnnotation(Autowired.class).required()
-                    && f.isAnnotationPresent(Qualifire.class)) {
-                qualiName = f.getAnnotation(Qualifire.class).value();
+                    && f.isAnnotationPresent(Qualifier.class)) {
+                qualiName = f.getAnnotation(Qualifier.class).value();
                 for (Bean b : bean) {
                     Type[] t = b.getObject().getClass().getGenericInterfaces();
                     for (Type type : t) {
@@ -70,6 +97,16 @@ public class ApplicationContext {
 
         }
     }
+
+    /**
+     * Bean is created autowired
+     * @param className name class bean
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws InvocationTargetException
+     */
     private Object getAutowired(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
         ComponentScan componentScan = (ComponentScan) configClass.getAnnotation(ComponentScan.class);
         String thisName=null;
@@ -106,6 +143,12 @@ public class ApplicationContext {
         return objectAutowired;
     }
 
+    /**
+     * Set values to the methods bean
+     * @param object bean
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     private void setObjectMethods(Object object) throws InvocationTargetException, IllegalAccessException {
         Method[] methods=object.getClass().getDeclaredMethods();
         for(Method m:methods){
@@ -121,6 +164,15 @@ public class ApplicationContext {
             }
         }
     }
+
+    /**
+     * Bean is created the constructor
+     * @param classAutowired class bean
+     * @return
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
     private Object newObjectAutowired(Class classAutowired) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Object objectAutowired = null;
         Constructor[] constructors = classAutowired.getDeclaredConstructors();
@@ -149,6 +201,11 @@ public class ApplicationContext {
         return objectAutowired;
     }
 
+    /**
+     * The choice of context bean by type
+     * @param type type bean
+     * @return Bean
+     */
     private Object getObjectType(Type type) {
         Object result = null;
         int n = 0;
@@ -164,6 +221,11 @@ public class ApplicationContext {
         return result;
     }
 
+    /**
+     * Obtaining bean out of context on request
+     * @param className name bean
+     * @return Bean
+     */
     public Object getBean(String className) {
         for (Bean b : bean) {
             if (b.getName().equals(className)) {
@@ -188,6 +250,9 @@ public class ApplicationContext {
         return null;
     }
 
+    /**
+     * Add bean of the methods in the configuration file
+     */
     private void addBean() {
         Method[] m = configClass.getDeclaredMethods();
         String name;

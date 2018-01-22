@@ -1,7 +1,7 @@
 package com.github.spardarus.minispring.test.beans;
 
 import com.github.spardarus.minispring.context.annotations.Autowired;
-import com.github.spardarus.minispring.context.annotations.Qualifire;
+import com.github.spardarus.minispring.context.annotations.Qualifier;
 import com.github.spardarus.minispring.context.annotations.Scope;
 import com.github.spardarus.minispring.context.annotations.Service;
 
@@ -21,11 +21,11 @@ public class PrintService {
     }
 
     @Autowired
-    @Qualifire("getPrintable")
+    @Qualifier("getPrintable")
     Printable p;
 
     @Autowired
-    @Qualifire("zik")
+    @Qualifier("zik")
     Printable p2;
 
     public void say(){
